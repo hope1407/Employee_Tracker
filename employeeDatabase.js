@@ -37,17 +37,86 @@ const runProgram = () => {
     .then((answer) => {
       switch (answer.action) {
         case 'View/Add Departments':
-          //call view dept function
+          departments()
           break;
         case 'View/Add Roles':
-          //call view roles function
+          roles();
           break;
         case 'View/Add/Update Employees':
-          //call view employees function
+          employees();
           break;
         case 'Exit':
           connection.end();
           break;
       }
+    });
+};
+
+const departments = () => {
+  inquirer
+    .prompt({
+      name : 'action',
+      type : 'list',
+      message : 'Would you like to view or add departments?',
+      choices : ['View Departments', 'Add a New Department', 'Main Menu']
+    })
+    .then((answer) => {
+      switch (answer.action){
+        case 'View Departments':
+          //viewDepartments function;
+          break;
+        case 'Add a New Department':
+          //addDepartment function;
+          break;
+        case 'Main Menu':
+          runProgram();
+          break;
+      };
+    });
+};
+
+const roles = () => {
+  inquirer
+    .prompt({
+      name : 'action',
+      type : 'list',
+      message : 'Would you like to view or add roles?',
+      choices : ['View Roles', 'Add a New Role', 'Main Menu']
+    })
+    .then((answer) => {
+      switch (answer.action){
+        case 'View Roles':
+          //viewRoles function;
+          break;
+        case 'Add a New Role':
+          //addRole function;
+          break;
+        case 'Main Menu':
+          runProgram();
+          break;
+      };
+    });
+};
+
+const employees = () => {
+  inquirer
+    .prompt({
+      name : 'action',
+      type : 'list',
+      message : 'Would you like to view or add employees?',
+      choices : ['View Employees', 'Add a New Employee', 'Main Menu']
+    })
+    .then((answer) => {
+      switch (answer.action){
+        case 'View Employees':
+          //viewEmployees function;
+          break;
+        case 'Add a New Employee':
+          //addEmployees function;
+          break;
+        case 'Main Menu':
+          runProgram();
+          break;
+      };
     });
 };
