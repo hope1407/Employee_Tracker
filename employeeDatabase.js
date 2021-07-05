@@ -16,12 +16,13 @@ const connection = mysql.createConnection({
   database: 'employees_db',
 });
 
+//Database connection
 connection.connect((err) => {
   if (err) throw err;
   console.log(`We're connected!`)
   runProgram();
 });
-
+//Init program
 const runProgram = () => {
   inquirer
     .prompt({
@@ -52,7 +53,7 @@ const runProgram = () => {
       }
     });
 };
-
+//Questions and actions regarding departments
 const departments = () => {
   inquirer
     .prompt({
@@ -67,7 +68,7 @@ const departments = () => {
           viewDepartments();
           break;
         case 'Add a New Department':
-          addRemoveDepartment();
+          addDepartment();
           break;
         case 'Main Menu':
           runProgram();
@@ -75,7 +76,32 @@ const departments = () => {
       };
     });
 };
-
+//to view departments in company
+const viewDepartments = () => {
+  const query = 'SELECT * FROM department';
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    console.table(res)
+    runProgram();
+  });
+};
+//to add departments to company
+const addDepartment = () => {
+  inquirer
+    .prompt({
+      name: 'newDepartment',
+      type: 'input',
+      message: 'What new department would you like to add?'
+    }).then((answer) => {
+      const query = `INSERT INTO department (name) VALUES ('${answer.newDepartment}')`;
+      connection.query(query, (err, req) => {
+        if (err) throw err;
+        console.log(`Successfully added ${answer.newDepartment} to database!`);
+        runProgram();
+      })
+    })
+}
+//Questions and actions regarding roles
 const roles = () => {
   inquirer
     .prompt({
@@ -98,49 +124,7 @@ const roles = () => {
       };
     });
 };
-
-const employees = () => {
-  inquirer
-    .prompt({
-      name: 'action',
-      type: 'list',
-      message: 'Would you like to view or add employees?',
-      choices: ['View Employees', 'Add a New Employee', 'Main Menu']
-    })
-    .then((answer) => {
-      switch (answer.action) {
-        case 'View Employees':
-          viewEmployees();
-          break;
-        case 'Add a New Employee':
-          //addEmployees function;
-          break;
-        case 'Main Menu':
-          runProgram();
-          break;
-      };
-    });
-};
-
-const viewDepartments = () => {
-  const query = 'SELECT * FROM department';
-  connection.query(query, (err, res) => {
-    if (err) throw err;
-    console.table(res)
-    runProgram();
-  });
-};
-
-const viewEmployees = () => {
-  const query = 'SELECT * FROM employee';
-  connection.query(query, (err, res) => {
-    if (err) throw err;
-    console.log("This company has the following employees:")
-    console.table(res)
-    runProgram()
-  });
-};
-
+//to view roles in company
 const viewRoles = () => {
   const query = 'SELECT * FROM role';
   connection.query(query, (err, res) => {
@@ -150,44 +134,7 @@ const viewRoles = () => {
     runProgram()
   });
 };
-
-const addRemoveDepartment = () => {
-  inquirer
-    .prompt({
-      name: "addRemoveDepartment",
-      type: 'list',
-      message: 'Would you like to add or remove departments?',
-      choices: ["Add", "Remove", "Back to main menu"]
-    }).then((answer) => {
-      switch (answer.addRemoveDepartment) {
-        case "Add":
-          addDepartment();
-          break;
-        //case "Remove":
-        //removeDepartment();
-        //break;
-        case "Back to main menu":
-          runProgram();
-          break;
-      }
-    })
-}
-
-const addDepartment = () => {
-  inquirer
-    .prompt({
-      name: 'newDepartment',
-      type: 'input',
-      message: 'What new department would you like to add?'
-    }).then((answer) => {
-      const query = `INSERT INTO department (name) VALUES ('${answer.newDepartment}')`;
-      connection.query(query, (err, req) => {
-        if (err) throw err;
-        console.log(`Successfully added ${answer.newDepartment} to database!`);
-        runProgram();
-      })
-    })
-}
+//to add roles to company
 const addRole = () => {
   inquirer
     .prompt([
@@ -215,3 +162,89 @@ const addRole = () => {
       runProgram();
     });
 }
+//Questions and actions regarding employees
+const employees = () => {
+  inquirer
+    .prompt({
+      name: 'action',
+      type: 'list',
+      message: 'Would you like to view or add employees?',
+      choices: ['View Employees', 'Add a New Employee', 'Main Menu']
+    })
+    .then((answer) => {
+      switch (answer.action) {
+        case 'View Employees':
+          viewEmployees();
+          break;
+        case 'Add a New Employee':
+          addEmployees();
+          break;
+        case 'Main Menu':
+          runProgram();
+          break;
+      };
+    });
+};
+//to view employees in company
+const viewEmployees = () => {
+  const query = 'SELECT * FROM employee';
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    console.log("This company has the following employees:")
+    console.table(res)
+    runProgram()
+  });
+};
+//to add employees to company
+const addEmployees = () => {
+  inquirer
+    .prompt([
+      {
+        name: 'firstName',
+        type: 'input',
+        message: 'What is the first name of the employee?'
+      },
+      {
+        name: 'lastName',
+        type: 'input',
+        message: 'What is the last name of the employee?',
+      },
+      {
+        name: 'roleId',
+        type: 'input',
+        message: 'What is the ID of the role for which the employee will play?',
+      },
+      {
+        name: 'managerId',
+        type: 'input',
+        message: 'What is the ID of the manager for which the employee will report to?',
+      },
+    ]).then((answers) => {
+      const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${answers.firstName}','${answers.lastName}', '${answers.roleId}','${answers.managerId}')`;
+      connection.query(query, (err,req) =>{
+        if (err) throw err;
+        console.log('Successfully added new employee!')
+      })
+    });
+}
+/* const addRemoveDepartment = () => {
+  inquirer
+    .prompt({
+      name: "addRemoveDepartment",
+      type: 'list',
+      message: 'Would you like to add or remove departments?',
+      choices: ["Add", "Remove", "Back to main menu"]
+    }).then((answer) => {
+      switch (answer.addRemoveDepartment) {
+        case "Add":
+          addDepartment();
+          break;
+        //case "Remove":
+        //removeDepartment();
+        //break;
+        case "Back to main menu":
+          runProgram();
+          break;
+      }
+    })
+} */
