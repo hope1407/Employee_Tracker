@@ -266,11 +266,11 @@ const updateRole = () => {
           `UPDATE employee SET ? WHERE ?`,
           [
             {
-              role_id: chosenEmployee.newRole,
+              first_name: chosenEmployee
             },
             {
-              first_name: chosenEmployee
-            }
+              role_id: answers.newRole,
+            },
           ],
           (err) => {
             if (err) throw err;
