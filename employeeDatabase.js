@@ -169,7 +169,7 @@ const employees = () => {
       name: 'action',
       type: 'list',
       message: 'Would you like to view or add employees?',
-      choices: ['View Employees', 'Add a New Employee', 'Main Menu']
+      choices: ['View Employees', 'Add a New Employee', 'Update a Role', 'Main Menu']
     })
     .then((answer) => {
       switch (answer.action) {
@@ -179,6 +179,8 @@ const employees = () => {
         case 'Add a New Employee':
           addEmployees();
           break;
+        case 'Update a Role':
+          updateRole();
         case 'Main Menu':
           runProgram();
           break;
@@ -221,9 +223,61 @@ const addEmployees = () => {
       },
     ]).then((answers) => {
       const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${answers.firstName}','${answers.lastName}', '${answers.roleId}','${answers.managerId}')`;
-      connection.query(query, (err,req) =>{
+      connection.query(query, (err, req) => {
         if (err) throw err;
         console.log('Successfully added new employee!')
       })
+      runProgram();
     });
+}
+
+const updateRole = () => {
+  const query = `SELECT * FROM employee`;
+  connection.query(query, (err, res) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: 'choice',
+          type: 'rawlist',
+          choices() {
+            const choiceArray = [];
+            res.forEach(({ first_name }) => {
+              choiceArray.push(first_name);
+            });
+            return choiceArray;
+          },
+          message: `Which employee's role would you like to update?`,
+        },
+        {
+          name: 'newRole',
+          type: 'input',
+          message: `What is the ID for the employee's new role?`,
+        }
+      ])
+      .then((answers) => {
+        let chosenEmployee;
+        res.forEach((employee) => {
+          if (employee.first_name === answers.choice) {
+            chosenEmployee = employee;
+          }
+        })
+        connection.query(
+          `UPDATE employee SET ? WHERE ?`,
+          [
+            {
+              role_id: chosenEmployee.newRole,
+            },
+            {
+              first_name: chosenEmployee
+            }
+          ],
+          (err) => {
+            if (err) throw err;
+            console.log('Employee role updated!');
+            runProgram();
+          }
+        )
+      })
+  })
 }
