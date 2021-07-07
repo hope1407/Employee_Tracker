@@ -227,7 +227,7 @@ const addEmployees = () => {
       })
     });
 }
-/* const addRemoveDepartment = () => {
+/* const removeDepartment = () => {
   inquirer
     .prompt({
       name: "addRemoveDepartment",
