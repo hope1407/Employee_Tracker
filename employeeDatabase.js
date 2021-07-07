@@ -227,24 +227,3 @@ const addEmployees = () => {
       })
     });
 }
-/* const removeDepartment = () => {
-  inquirer
-    .prompt({
-      name: "addRemoveDepartment",
-      type: 'list',
-      message: 'Would you like to add or remove departments?',
-      choices: ["Add", "Remove", "Back to main menu"]
-    }).then((answer) => {
-      switch (answer.addRemoveDepartment) {
-        case "Add":
-          addDepartment();
-          break;
-        //case "Remove":
-        //removeDepartment();
-        //break;
-        case "Back to main menu":
-          runProgram();
-          break;
-      }
-    })
-} */
