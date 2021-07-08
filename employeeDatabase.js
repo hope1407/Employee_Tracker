@@ -181,6 +181,7 @@ const employees = () => {
           break;
         case 'Update a Role':
           updateRole();
+          break;
         case 'Main Menu':
           runProgram();
           break;
@@ -261,15 +262,16 @@ const updateRole = () => {
           if (employee.first_name === answers.choice) {
             chosenEmployee = employee;
           }
-        })
+        });
+        console.log(chosenEmployee);
         connection.query(
           `UPDATE employee SET ? WHERE ?`,
           [
             {
-              first_name: chosenEmployee
+              role_id: answers.newRole,
             },
             {
-              role_id: answers.newRole,
+              first_name: chosenEmployee.first_name
             },
           ],
           (err) => {

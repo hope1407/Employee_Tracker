@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS employees_db;
+
 CREATE DATABASE employees_db;
 
 USE employees_db;
@@ -35,6 +37,6 @@ INSERT INTO role (title, salary, department_id)
 VALUES ("Manager", 100000, 1);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id )
-VALUES ("Johnny", "Hope", "Account Coordinator", 1, 1);
+VALUES ("Johnny", "Hope", 1, 1);
 
 SELECT * FROM department;
