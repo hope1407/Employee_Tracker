@@ -263,7 +263,6 @@ const updateRole = () => {
             chosenEmployee = employee;
           }
         });
-        console.log(chosenEmployee);
         connection.query(
           `UPDATE employee SET ? WHERE ?`,
           [
