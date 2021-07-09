@@ -231,7 +231,7 @@ const addEmployees = () => {
       runProgram();
     });
 }
-
+//to update roles
 const updateRole = () => {
   const query = `SELECT * FROM employee`;
   connection.query(query, (err, res) => {
